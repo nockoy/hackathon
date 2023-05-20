@@ -1,0 +1,51 @@
+package main
+
+import (
+	"db/controller"
+	"db/dao"
+	_ "github.com/go-sql-driver/mysql"
+	"log"
+	"net/http"
+)
+
+// ① GoプログラムからMySQLへ接続
+
+func init() {
+	dao.DbInit()
+}
+
+// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
+func handler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		controller.SearchUser(w, r)
+
+	case http.MethodPost:
+		controller.RegisterUser(w, r)
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
+func main() {
+
+	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
+	http.HandleFunc("/user", handler)
+
+	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
+	closeDBWithSysCall()
+
+	// 8000番ポートでリクエストを待ち受ける
+	log.Println("Listening...")
+	if err := http.ListenAndServe(":8000", nil); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
+func closeDBWithSysCall() {
+	dao.DbClose()
+}
