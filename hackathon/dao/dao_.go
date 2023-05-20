@@ -14,29 +14,29 @@ import (
 
 func DbInit() {
 	// ①-1
+	/*
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Printf("読み込み出来ませんでした: %v", err)
 	}
+	 */
 
+	/*
 	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlUserPwd := os.Getenv("MYSQL_PASSWORD")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
+	 */
 
-	/*
-		// DB接続のための準備
-		mysqlUser := os.Getenv("MYSQL_USER")
-		mysqlPwd := os.Getenv("MYSQL_PWD")
-		mysqlHost := os.Getenv("MYSQL_HOST")
-		mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
-		connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
-		db, err := sql.Open("mysql", connStr)
+	// DB接続のための準備
+	mysqlUser := os.Getenv("MYSQL_USER")
+	mysqlPwd := os.Getenv("MYSQL_PWD")
+	mysqlHost := os.Getenv("MYSQL_HOST")
+	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
-	*/
+	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
+	_db, err := sql.Open("mysql", connStr)
 
-	// ①-2
-	_db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@(localhost:3306)/%s", mysqlUser, mysqlUserPwd, mysqlDatabase))
 	if err != nil {
 		log.Fatalf("fail: sql.Open, %v\n", err)
 	}
