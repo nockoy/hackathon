@@ -11,24 +11,24 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Userid struct {
-	Id string `json:"id"`
+type UserID struct {
+	ID string `json:"id"`
 }
 
 func RegisterUser(u model.User) ([]byte, error) {
 
 	id := ulid.Make().String()
-	u.Id = id
+	u.ID = id
 	err := dao.Create(u)
 	if err != nil {
 		return nil, err
 	}
 
 	//idを返す
-	var u2 Userid
-	u2.Id = id
+	var userID UserID
+	userID.ID = id
 
-	bytes, err := json.Marshal(u2)
+	bytes, err := json.Marshal(userID)
 	if err != nil {
 		log.Printf("fail: json.Marshal, %v\n", err)
 		return nil, err

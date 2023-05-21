@@ -11,7 +11,7 @@ import (
 // ① GoプログラムからMySQLへ接続
 
 func init() {
-	dao.DbInit()
+	dao.DBInit()
 }
 
 // ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
@@ -47,5 +47,5 @@ func main() {
 
 // ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 func closeDBWithSysCall() {
-	dao.DbClose()
+	dao.DBClose()
 }
