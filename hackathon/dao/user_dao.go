@@ -19,7 +19,7 @@ func Create(u model.User) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO user(id, name, age) values (?,?,?)", u.Id, u.Name, u.Age)
+	_, err = tx.Exec("INSERT INTO user(id, name, age) values (?,?,?)", u.ID, u.Name, u.Age)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()
@@ -43,7 +43,7 @@ func SearchByName(name string) ([]model.User, error) {
 
 	for rows.Next() {
 		var u model.User
-		if ServerErr := rows.Scan(&u.Id, &u.Name, &u.Age); ServerErr != nil {
+		if ServerErr := rows.Scan(&u.ID, &u.Name, &u.Age); ServerErr != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 
 			if ServerErr := rows.Close(); ServerErr != nil { // 500を返して終了するが、その前にrowsのClose処理が必要

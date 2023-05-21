@@ -11,22 +11,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func DbInit() {
-	// ①-1
-	/*
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Printf("読み込み出来ませんでした: %v", err)
-	}
-	 */
-
-	/*
-	mysqlUser := os.Getenv("MYSQL_USER")
-	mysqlUserPwd := os.Getenv("MYSQL_PASSWORD")
-	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
-	 */
-
-
+func DBInit() {
 	// DB接続のための準備
 	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlPwd := os.Getenv("MYSQL_PWD")
@@ -46,7 +31,7 @@ func DbInit() {
 	db = _db
 }
 
-func DbClose() {
+func DBClose() {
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGTERM, syscall.SIGINT)
 	go func() {
