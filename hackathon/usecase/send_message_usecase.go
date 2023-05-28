@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid/v2"
 	"log"
+	"time"
 )
 
 type MessageID struct {
@@ -17,6 +18,12 @@ type MessageID struct {
 func SendMessage(m model.Messages) ([]byte, error) {
 
 	m.ID = ulid.Make().String()
+
+	//日本の現在時刻を記録したいが日本の時刻にならなかった
+	jst := time.FixedZone("Asia/Tokyo", 9*60*60)
+	nowJST := time.Now().In(jst)
+	m.CreatedAt = nowJST
+	m.UpdatedAt = nowJST
 
 	err := dao.CreateMSG(m)
 	if err != nil {

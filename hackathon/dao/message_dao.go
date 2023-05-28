@@ -38,7 +38,7 @@ func CreateMSG(m model.Messages) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO messages(id, room_id, user_id, text) values (?,?,?,?)", m.ID, m.RoomID, m.UserID, m.Text)
+	_, err = tx.Exec("INSERT INTO messages(id, room_id, user_id, text, created_at, updated_at) values (?,?,?,?,?,?)", m.ID, m.RoomID, m.UserID, m.Text, m.CreatedAt, m.UpdatedAt)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()
