@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid/v2"
 	"log"
+	"time"
 )
 
 type UserID struct {
@@ -16,8 +17,15 @@ type UserID struct {
 
 func RegisterUser(u model.Users) ([]byte, error) {
 
-	id := ulid.Make().String()
-	u.ID = id //作成日時は自動で入る
+	u.ID = ulid.Make().String()
+
+	//日本の現在時刻を記録したいが日本の時刻にならなかった
+	jst := time.FixedZone("Asia/Tokyo", 9*60*60)
+	nowJST := time.Now().In(jst)
+
+	u.CreatedAt = nowJST
+	u.UpdatedAt = nowJST
+
 	err := dao.Create(u)
 	if err != nil {
 		return nil, err
@@ -25,7 +33,7 @@ func RegisterUser(u model.Users) ([]byte, error) {
 
 	//idを返す
 	var userID UserID
-	userID.ID = id
+	userID.ID = u.ID
 
 	bytes, err := json.Marshal(userID)
 	if err != nil {
