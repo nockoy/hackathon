@@ -15,7 +15,7 @@ func init() {
 }
 
 // ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
-func handler(w http.ResponseWriter, r *http.Request) {
+func userHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		controller.SearchUser(w, r)
@@ -45,7 +45,8 @@ func messageHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
-	http.HandleFunc("/user", handler)
+	http.HandleFunc("/user", userHandler)
+	http.HandleFunc("/message", messageHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()
