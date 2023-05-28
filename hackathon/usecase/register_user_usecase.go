@@ -19,16 +19,14 @@ func RegisterUser(u model.Users) ([]byte, error) {
 
 	u.ID = ulid.Make().String()
 
-	//日本の現在時刻を記録
-	jst, err := time.LoadLocation("Asia/Tokyo")
-	if err != nil {
-		panic(err)
-	}
+	//日本の現在時刻を記録したいが日本の時刻にならなかった
+	jst := time.FixedZone("Asia/Tokyo", 9*60*60)
 	nowJST := time.Now().In(jst)
+
 	u.CreatedAt = nowJST
 	u.UpdatedAt = nowJST
 
-	err = dao.Create(u)
+	err := dao.Create(u)
 	if err != nil {
 		return nil, err
 	}
