@@ -9,7 +9,7 @@ import (
 
 var db *sql.DB
 
-func Create(u model.Users) error {
+func CreateUser(u model.Users) error {
 	//トランザクション開始
 	tx, err := db.Begin()
 	if err != nil {
