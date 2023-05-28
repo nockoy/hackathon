@@ -3,16 +3,14 @@ package dao
 import (
 	"database/sql"
 	"db/model"
-	"log"
-	"time"
-
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 )
 
 var db *sql.DB
 
 func Create(u model.Users) error {
-	//トランザクション開始c
+	//トランザクション開始
 	tx, err := db.Begin()
 	if err != nil {
 		log.Printf("fail: db.Begin, %v\n", err)
@@ -20,7 +18,7 @@ func Create(u model.Users) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO user(id, name, created_at, updated_at) values (?,?,?,?)", u.ID, u.Name, time.Now(), time.Now())
+	_, err = tx.Exec("INSERT INTO user(id, name) values (?,?)", u.ID, u.Name)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()

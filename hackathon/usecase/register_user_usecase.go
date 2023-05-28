@@ -16,8 +16,7 @@ type UserID struct {
 
 func RegisterUser(u model.Users) ([]byte, error) {
 
-	id := ulid.Make().String()
-	u.ID = id //作成日時は自動で入る
+	u.ID = ulid.Make().String() //作成日時は自動で入る
 	err := dao.Create(u)
 	if err != nil {
 		return nil, err
@@ -25,7 +24,7 @@ func RegisterUser(u model.Users) ([]byte, error) {
 
 	//idを返す
 	var userID UserID
-	userID.ID = id
+	userID.ID = u.ID
 
 	bytes, err := json.Marshal(userID)
 	if err != nil {
