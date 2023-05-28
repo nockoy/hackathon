@@ -6,9 +6,9 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func SearchUser(name string) ([]byte, error) {
+func GetMessage(RoomID string) ([]byte, error) {
 
-	users, err := dao.SearchUserByName(name)
+	users, err := dao.GetMessage(RoomID)
 	if err != nil {
 		return nil, err
 	}

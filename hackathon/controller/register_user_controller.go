@@ -18,7 +18,7 @@ type UserResForHTTPPost struct {
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
-	var u model.User
+	var u model.Users
 
 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
 		log.Println("fail: Error1")
@@ -26,7 +26,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if isOk := RegisterUserCheck(u.Name, u.Age); isOk != true {
+	if isOk := RegisterUserCheck(u.Name); isOk != true {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -42,7 +42,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func RegisterUserCheck(name string, age int) bool {
+func RegisterUserCheck(name string) bool {
 
 	if name == "" {
 		log.Println("fail: name is empty")
@@ -51,11 +51,6 @@ func RegisterUserCheck(name string, age int) bool {
 
 	if utf8.RuneCountInString(name) > 50 {
 		log.Println("fail: name length is over 50")
-		return false
-	}
-
-	if age < 20 || age > 80 {
-		log.Println("fail: age is not between 20-80")
 		return false
 	}
 

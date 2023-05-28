@@ -30,6 +30,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func messageHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		controller.GetMessage(w, r)
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
 func main() {
 
 	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す

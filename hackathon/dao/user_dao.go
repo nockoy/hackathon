@@ -4,14 +4,15 @@ import (
 	"database/sql"
 	"db/model"
 	"log"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var db *sql.DB
 
-func Create(u model.User) error {
-	//トランザクション開始
+func Create(u model.Users) error {
+	//トランザクション開始c
 	tx, err := db.Begin()
 	if err != nil {
 		log.Printf("fail: db.Begin, %v\n", err)
@@ -19,7 +20,7 @@ func Create(u model.User) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO user(id, name, age) values (?,?,?)", u.ID, u.Name, u.Age)
+	_, err = tx.Exec("INSERT INTO user(id, name, created_at, updated_at) values (?,?,?,?)", u.ID, u.Name, time.Now(), time.Now())
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()
@@ -35,15 +36,15 @@ func Create(u model.User) error {
 	return nil
 }
 
-func SearchByName(name string) ([]model.User, error) {
+func SearchUserByName(name string) ([]model.Users, error) {
 
-	rows, err := db.Query("SELECT id, name, age FROM user WHERE name = ?", name)
+	rows, err := db.Query("SELECT id, name FROM users WHERE name = ?", name)
 
-	users := make([]model.User, 0)
+	users := make([]model.Users, 0)
 
 	for rows.Next() {
-		var u model.User
-		if ServerErr := rows.Scan(&u.ID, &u.Name, &u.Age); ServerErr != nil {
+		var u model.Users
+		if ServerErr := rows.Scan(&u.ID, &u.Name); ServerErr != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 
 			if ServerErr := rows.Close(); ServerErr != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
