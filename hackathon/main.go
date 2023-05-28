@@ -34,6 +34,8 @@ func messageHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		controller.GetMessage(w, r)
+	case http.MethodPost:
+		controller.SendMessage(w, r)
 
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)

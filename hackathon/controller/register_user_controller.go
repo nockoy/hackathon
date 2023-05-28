@@ -11,7 +11,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type UserResForHTTPPost struct {
+type UserResForHTTPPost struct { //使ってない
 	Name string `json:"name"`
 	Age  int    `json:"age"`
 }

@@ -28,3 +28,28 @@ func GetMessage(RoomID string) ([]model.Messages, error) {
 
 	return messages, err
 }
+
+func CreateMSG(m model.Messages) error {
+	//トランザクション開始
+	tx, err := db.Begin()
+	if err != nil {
+		log.Printf("fail: db.Begin, %v\n", err)
+		return err
+	}
+
+	//INSERTする
+	_, err = tx.Exec("INSERT INTO messages(id, room_id, 'from', text) values (?,?,?,?)", m.ID, m.RoomID, m.From, m.Text)
+	if err != nil {
+		log.Printf("fail: tx.Exec, %v\n", err)
+		tx.Rollback()
+		return err
+	}
+
+	//トランザクション終了
+	if err := tx.Commit(); err != nil {
+		log.Printf("fail: tx.Commit, %v\n", err)
+		return err
+	}
+
+	return nil
+}
