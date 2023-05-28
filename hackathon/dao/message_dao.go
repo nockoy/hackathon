@@ -15,7 +15,7 @@ func GetMessage(RoomID string) ([]model.Messages, error) {
 
 	for rows.Next() {
 		var m model.Messages
-		if ServerErr := rows.Scan(&m.ID, &m.ReplyToID, &m.RoomID, &m.From, &m.Text, &m.CreatedAt, &m.UpdatedAt); ServerErr != nil {
+		if ServerErr := rows.Scan(&m.ID, &m.ReplyToID, &m.RoomID, &m.UserID, &m.Text, &m.CreatedAt, &m.UpdatedAt); ServerErr != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 
 			if ServerErr := rows.Close(); ServerErr != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
@@ -38,7 +38,7 @@ func CreateMSG(m model.Messages) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO messages(id, room_id, 'from', text) values (?,?,?,?)", m.ID, m.RoomID, m.From, m.Text)
+	_, err = tx.Exec("INSERT INTO messages(id, room_id, user_id, text) values (?,?,?,?)", m.ID, m.RoomID, m.UserID, m.Text)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()
