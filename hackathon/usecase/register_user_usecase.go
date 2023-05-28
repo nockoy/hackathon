@@ -5,20 +5,19 @@ import (
 	"db/model"
 	"encoding/json"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid/v2"
 	"log"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 type UserID struct {
 	ID string `json:"id"`
 }
 
-func RegisterUser(u model.User) ([]byte, error) {
+func RegisterUser(u model.Users) ([]byte, error) {
 
 	id := ulid.Make().String()
-	u.ID = id
+	u.ID = id //作成日時は自動で入る
 	err := dao.Create(u)
 	if err != nil {
 		return nil, err
