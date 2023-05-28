@@ -18,7 +18,7 @@ func Create(u model.Users) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO user(id, name) values (?,?)", u.ID, u.Name)
+	_, err = tx.Exec("INSERT INTO users(id, name) values (?,?)", u.ID, u.Name)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()
