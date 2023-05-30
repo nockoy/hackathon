@@ -10,17 +10,6 @@ import (
 	"unicode/utf8"
 )
 
-type MessageGet struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-}
-
-type MSGResForHTTPPost struct { //使ってない
-	RoomID string `json:"room_id"`
-	From   int    `json:"from"`
-	Text   int    `json:"text"`
-}
-
 func SendMessage(w http.ResponseWriter, r *http.Request) {
 
 	var m model.Messages
