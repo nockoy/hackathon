@@ -62,4 +62,18 @@ func main() {
 	http.HandleFunc("/message", messageHandler)
 	http.HandleFunc("/newroom", roomHandler)
 
+	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
+	closeDBWithSysCall()
+	
+	// 8000番ポートでリクエストを待ち受ける
+	log.Println("Listening...")
+	if err := http.ListenAndServe(":8000", nil); err != nil {
+		log.Fatal(err)
+	}
+
+}
+
+// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
+func closeDBWithSysCall() {
+	dao.DBClose()
 }
