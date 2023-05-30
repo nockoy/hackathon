@@ -15,6 +15,21 @@ type UserID struct {
 	ID string `json:"id"`
 }
 
+func SearchUser(name string) ([]byte, error) {
+
+	users, err := dao.SearchUserByName(name)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := json.Marshal(users)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}
+
 func RegisterUser(u model.Users) ([]byte, error) {
 
 	u.ID = ulid.Make().String()

@@ -58,22 +58,8 @@ func roomHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
 	http.HandleFunc("/user", userHandler)
 	http.HandleFunc("/message", messageHandler)
 	http.HandleFunc("/newroom", roomHandler)
 
-	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
-	closeDBWithSysCall()
-
-	// 8000番ポートでリクエストを待ち受ける
-	log.Println("Listening...")
-	if err := http.ListenAndServe(":8000", nil); err != nil {
-		log.Fatal(err)
-	}
-}
-
-// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
-func closeDBWithSysCall() {
-	dao.DBClose()
 }
