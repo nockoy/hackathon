@@ -9,7 +9,6 @@ import (
 )
 
 // ① GoプログラムからMySQLへ接続
-
 func init() {
 	dao.DBInit()
 }
