@@ -15,6 +15,21 @@ type MessageID struct {
 	ID string `json:"id"`
 }
 
+func GetMessage(RoomID string) ([]byte, error) {
+
+	users, err := dao.GetMessage(RoomID)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := json.Marshal(users)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}
+
 func SendMessage(m model.Messages) ([]byte, error) {
 
 	m.ID = ulid.Make().String()
