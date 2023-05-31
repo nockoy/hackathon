@@ -64,7 +64,7 @@ func main() {
 			"message": "hello world",
 		})
 	})
-	
+
 	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
 	http.HandleFunc("/user", userHandler)
 	http.HandleFunc("/message", messageHandler)
