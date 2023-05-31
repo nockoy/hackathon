@@ -35,7 +35,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	var u model.Users
 
 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-		log.Println("fail: Error1")
+		log.Println("fail: decode err")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}

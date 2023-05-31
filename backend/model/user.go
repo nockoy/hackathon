@@ -28,7 +28,7 @@ type Rooms struct {
 }
 
 type Members struct {
-	WorkspaceID string `json:"id"`
+	WorkspaceID string `json:"workspace_id"`
 	UserID      string `json:"user_id"`
 }
 
