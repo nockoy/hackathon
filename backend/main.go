@@ -20,10 +20,8 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		controller.SearchUser(w, r)
-
 	case http.MethodPost:
 		controller.RegisterUser(w, r)
-
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
 		w.WriteHeader(http.StatusBadRequest)
