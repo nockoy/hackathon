@@ -3,6 +3,8 @@ package main
 import (
 	"db/controller"
 	"db/dao"
+	middleware "db/middlware"
+	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
@@ -56,6 +58,15 @@ func roomHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	engine := gin.Default()
+	engine.Use(middleware.Cors())
+	engine.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "hello world",
+		})
+	})
+	engine.Run(":8000")
 
 	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
 	http.HandleFunc("/user", userHandler)
