@@ -64,8 +64,7 @@ func main() {
 			"message": "hello world",
 		})
 	})
-	engine.Run(":8000")
-
+	
 	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
 	http.HandleFunc("/user", userHandler)
 	http.HandleFunc("/message", messageHandler)
@@ -75,10 +74,7 @@ func main() {
 	closeDBWithSysCall()
 
 	// 8000番ポートでリクエストを待ち受ける
-	log.Println("Listening...")
-	if err := http.ListenAndServe(":8000", nil); err != nil {
-		log.Fatal(err)
-	}
+	engine.Run(":8000")
 }
 
 // ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
