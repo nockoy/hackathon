@@ -6,21 +6,30 @@ import (
 
 type Users struct {
 	ID        string    `json:"id" gorm:"primaryKey"`
-	Name      string    `json:"name" gorm:"unique;not null"`
+	Name      string    `json:"name" gorm:"not null"`
+	Email     string    `json:"email" gorm:"unique;not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type Rooms struct {
+type Workspaces struct {
 	ID        string    `json:"id" gorm:"primaryKey"`
 	Name      string    `json:"name" gorm:"unique;not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type Rooms struct {
+	ID          string    `json:"id" gorm:"primaryKey"`
+	WorkspaceID string    `json:"workspace_id" gorm:"not null"`
+	Name        string    `json:"name" gorm:"unique;not null"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}
+
 type Members struct {
-	RoomID string `json:"id"`
-	UserID string `json:"user_id"`
+	WorkspaceID string `json:"id"`
+	UserID      string `json:"user_id"`
 }
 
 type Messages struct {
