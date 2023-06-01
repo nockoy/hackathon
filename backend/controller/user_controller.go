@@ -9,6 +9,27 @@ import (
 	"unicode/utf8"
 )
 
+func UserHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+		SearchUser(w, r)
+	case http.MethodPost:
+		RegisterUser(w, r)
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
 func SearchUser(w http.ResponseWriter, r *http.Request) {
 
 	name := r.URL.Query().Get("name")

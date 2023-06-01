@@ -9,6 +9,28 @@ import (
 	"unicode/utf8"
 )
 
+func RoomHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+		SearchRoom(w, r)
+	case http.MethodPost:
+		RegisterRoom(w, r)
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
 func SearchRoom(w http.ResponseWriter, r *http.Request) {
 
 	roomID := r.URL.Query().Get("roomID")

@@ -9,6 +9,26 @@ import (
 	"unicode/utf8"
 )
 
+func WorkspaceHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+
+	switch r.Method {
+	case http.MethodPost:
+		RegisterWorkspace(w, r)
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
 func RegisterWorkspace(w http.ResponseWriter, r *http.Request) {
 
 	var workspaces model.Workspaces
