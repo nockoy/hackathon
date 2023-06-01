@@ -39,6 +39,11 @@ func messageHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+
 	switch r.Method {
 	case http.MethodGet:
 		controller.GetMessage(w, r)
@@ -56,9 +61,34 @@ func roomHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+
 	switch r.Method {
 	case http.MethodPost:
 		controller.RegisterRoom(w, r)
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
+func workspaceHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+
+	switch r.Method {
+	case http.MethodPost:
+		controller.RegisterWorkspace(w, r)
 
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
@@ -83,7 +113,8 @@ func main() {
 	// ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
 	http.HandleFunc("/user", userHandler)
 	http.HandleFunc("/message", messageHandler)
-	http.HandleFunc("/newroom", roomHandler)
+	http.HandleFunc("/room", roomHandler)
+	http.HandleFunc("/workspace", workspaceHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	dao.DBClose()
