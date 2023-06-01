@@ -67,6 +67,8 @@ func roomHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch r.Method {
+	case http.MethodGet:
+		controller.GetMessage(w, r)
 	case http.MethodPost:
 		controller.RegisterRoom(w, r)
 

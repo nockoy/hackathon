@@ -14,6 +14,21 @@ type RoomID struct {
 	ID string `json:"id"`
 }
 
+func SearchRoom(roomID string) ([]byte, error) {
+
+	users, err := dao.SearchRoomByID(roomID)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := json.Marshal(users)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}
+
 func RegisterRoom(room model.Rooms) ([]byte, error) {
 
 	room.ID = ulid.Make().String()

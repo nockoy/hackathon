@@ -9,6 +9,29 @@ import (
 	"unicode/utf8"
 )
 
+func SearchRoom(w http.ResponseWriter, r *http.Request) {
+
+	roomID := r.URL.Query().Get("roomID")
+
+	if roomID == "" {
+		log.Println("fail: roomID is empty")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	bytes, err := usecase.SearchRoom(roomID)
+
+	if err != nil {
+
+		log.Printf("fail: , %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+
+}
+
 func RegisterRoom(w http.ResponseWriter, r *http.Request) {
 
 	var room model.Rooms
