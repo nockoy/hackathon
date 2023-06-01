@@ -40,7 +40,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if isOk := RegisterUserCheck(u.Name); isOk != true {
+	if isOk := RegisterUserCheck(u.Name, u.Email); isOk != true {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -56,7 +56,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func RegisterUserCheck(name string) bool {
+func RegisterUserCheck(name string, email string) bool {
 
 	if name == "" {
 		log.Println("fail: name is empty")
@@ -65,6 +65,11 @@ func RegisterUserCheck(name string) bool {
 
 	if utf8.RuneCountInString(name) > 50 {
 		log.Println("fail: name length is over 50")
+		return false
+	}
+
+	if email == "" {
+		log.Println("fail: email is empty")
 		return false
 	}
 
