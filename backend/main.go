@@ -18,6 +18,11 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+
 	switch r.Method {
 	case http.MethodGet:
 		controller.SearchUser(w, r)
@@ -81,16 +86,11 @@ func main() {
 	http.HandleFunc("/newroom", roomHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
-	closeDBWithSysCall()
+	dao.DBClose()
 
 	// 8000番ポートでリクエストを待ち受ける
 	log.Println("Listening...")
 	if err := http.ListenAndServe(":8000", nil); err != nil {
 		log.Fatal(err)
 	}
-}
-
-// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
-func closeDBWithSysCall() {
-	dao.DBClose()
 }
