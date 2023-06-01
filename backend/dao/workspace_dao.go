@@ -14,7 +14,7 @@ func CreateWorkspace(workspace model.Workspaces) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO workspaces(id, name, created_at, updated_at) values (?,?,?,?)", workspace.ID, workspace.Name, workspace.CreatedAt, workspace.UpdatedAt)
+	_, err = tx.Exec("INSERT INTO workspaces(id, name) values (?,?)", workspace.ID, workspace.Name)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()

@@ -36,7 +36,7 @@ func CreateRoom(room model.Rooms) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO rooms(id, workspace_id, name, created_at, updated_at) values (?,?,?,?,?)", room.ID, room.WorkspaceID, room.Name, room.CreatedAt, room.UpdatedAt)
+	_, err = tx.Exec("INSERT INTO rooms(id, workspace_id, name) values (?,?,?)", room.ID, room.WorkspaceID, room.Name)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()
