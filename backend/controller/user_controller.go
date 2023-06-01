@@ -32,7 +32,7 @@ func SearchUser(w http.ResponseWriter, r *http.Request) {
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
-	var u model.Rooms
+	var u model.Users
 
 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
 		log.Println("fail: decode err")

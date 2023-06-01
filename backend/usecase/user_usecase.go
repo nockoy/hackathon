@@ -31,7 +31,7 @@ func SearchUser(name string) ([]byte, error) {
 	return bytes, nil
 }
 
-func RegisterUser(u model.Rooms) ([]byte, error) {
+func RegisterUser(u model.Users) ([]byte, error) {
 
 	u.ID = ulid.Make().String()
 
