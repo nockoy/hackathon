@@ -1,13 +1,10 @@
 package dao
 
 import (
-	"database/sql"
 	"db/model"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 )
-
-var db *sql.DB
 
 func CreateUser(u model.Users) error {
 	//トランザクション開始
@@ -18,7 +15,7 @@ func CreateUser(u model.Users) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO users(id, name, email) values (?,?,?)", u.ID, u.Name, u.Email)
+	_, err = tx.Exec("INSERT INTO users(id, name, email, icon) values (?,?,?,?)", u.ID, u.Name, u.Email, u.Icon)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()
@@ -34,15 +31,15 @@ func CreateUser(u model.Users) error {
 	return nil
 }
 
-func SearchUserByName(name string) ([]model.Users, error) {
+func SearchUserByEmail(email string) ([]model.Users, error) {
 
-	rows, err := db.Query("SELECT id, name FROM users WHERE name = ?", name)
+	rows, err := db.Query("SELECT id, name, icon FROM users WHERE email = ?", email)
 
 	users := make([]model.Users, 0)
 
 	for rows.Next() {
 		var u model.Users
-		if ServerErr := rows.Scan(&u.ID, &u.Name); ServerErr != nil {
+		if ServerErr := rows.Scan(&u.ID, &u.Name, &u.Icon); ServerErr != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 
 			if ServerErr := rows.Close(); ServerErr != nil { // 500を返して終了するが、その前にrowsのClose処理が必要

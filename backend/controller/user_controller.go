@@ -20,7 +20,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		SearchUser(w, r)
+		SearchUserByEmail(w, r)
 	case http.MethodPost:
 		RegisterUser(w, r)
 	default:
@@ -30,17 +30,17 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func SearchUser(w http.ResponseWriter, r *http.Request) {
+func SearchUserByEmail(w http.ResponseWriter, r *http.Request) {
 
-	name := r.URL.Query().Get("name")
+	email := r.URL.Query().Get("email")
 
-	if name == "" {
-		log.Println("fail: name is empty")
+	if email == "" {
+		log.Println("fail: email is empty")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	bytes, err := usecase.SearchUser(name)
+	bytes, err := usecase.SearchUserByEmail(email)
 	if err != nil {
 		log.Printf("fail: , %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
