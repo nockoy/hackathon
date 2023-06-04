@@ -16,8 +16,8 @@ func main() {
 
 	http.HandleFunc("/user", controller.UserHandler)
 	http.HandleFunc("/message", controller.MessageHandler)
-	http.HandleFunc("/room", controller.RoomHandler)
-	http.HandleFunc("/workspace", controller.WorkspaceHandler)
+	http.HandleFunc("/channel/join", controller.ChannelHandler)
+	http.HandleFunc("/channel/notjoin", controller.NotJoinChannelHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	dao.DBClose()
