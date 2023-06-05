@@ -33,6 +33,21 @@ func SearchUserByEmail(email string) ([]byte, error) {
 	return bytes, nil
 }
 
+func SearchUserByUserID(userID string) ([]byte, error) {
+
+	users, err := dao.SearchUserByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := json.Marshal(users)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}
+
 func RegisterUser(u model.Users) ([]byte, error) {
 
 	u.ID = ulid.Make().String()

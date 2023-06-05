@@ -51,11 +51,11 @@ func SendMessageCheck(text string) bool {
 	return true
 }
 
-func GetMessage(w http.ResponseWriter, r *http.Request) {
+func GetMessages(w http.ResponseWriter, r *http.Request) {
 
-	roomId := r.URL.Query().Get("room_id")
+	channelId := r.URL.Query().Get("channel_id")
 
-	bytes, err := usecase.GetMessage(roomId)
+	bytes, err := usecase.GetMessages(channelId)
 	if err != nil {
 		log.Printf("fail: , %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -76,7 +76,7 @@ func MessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case http.MethodGet:
-		GetMessage(w, r)
+		GetMessages(w, r)
 	case http.MethodPost:
 		SendMessage(w, r)
 	default:

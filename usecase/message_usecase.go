@@ -15,9 +15,9 @@ type MessageID struct {
 	ID string `json:"id"`
 }
 
-func GetMessage(RoomID string) ([]byte, error) {
+func GetMessages(RoomID string) ([]byte, error) {
 
-	messages, err := dao.GetMessage(RoomID)
+	messages, err := dao.GetMessages(RoomID)
 	if err != nil {
 		return nil, err
 	}

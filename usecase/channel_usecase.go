@@ -14,9 +14,9 @@ type ChannelID struct {
 	ID string `json:"id"`
 }
 
-func GetJoinChannelsByUserID(userID string) ([]byte, error) {
+func GetChannelByChannelID(channelID string) ([]byte, error) {
 
-	channels, err := dao.GetJoinChannelsByUserID(userID)
+	channels, err := dao.GetChannelByChannelID(channelID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,9 +29,24 @@ func GetJoinChannelsByUserID(userID string) ([]byte, error) {
 	return bytes, nil
 }
 
-func GetNotJoinChannelsByUserID(userID string) ([]byte, error) {
+func GetUserChannelsByUserID(userID string) ([]byte, error) {
 
-	channels, err := dao.GetNotJoinChannelsByUserID(userID)
+	channels, err := dao.GetUserChannelsByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := json.Marshal(channels)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}
+
+func GetOtherChannelsByUserID(userID string) ([]byte, error) {
+
+	channels, err := dao.GetOtherChannelsByUserID(userID)
 	if err != nil {
 		return nil, err
 	}

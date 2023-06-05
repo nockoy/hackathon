@@ -53,6 +53,28 @@ func SearchUserByEmail(email string) ([]model.Users, error) {
 	return users, err
 }
 
+func SearchUserByUserID(UserID string) ([]model.Users, error) {
+
+	rows, err := db.Query("SELECT id, name, icon FROM users WHERE id = ?", UserID)
+
+	users := make([]model.Users, 0)
+
+	for rows.Next() {
+		var u model.Users
+		if ServerErr := rows.Scan(&u.ID, &u.Name, &u.Icon); ServerErr != nil {
+			log.Printf("fail: rows.Scan, %v\n", err)
+
+			if ServerErr := rows.Close(); ServerErr != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
+				log.Printf("fail: rows.Close(), %v\n", err)
+			}
+			return nil, ServerErr
+		}
+		users = append(users, u)
+	}
+
+	return users, err
+}
+
 /*
 func Delete(w http.ResponseWriter) {
 	//トランザクション開始

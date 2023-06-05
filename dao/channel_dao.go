@@ -5,7 +5,29 @@ import (
 	"log"
 )
 
-func GetJoinChannelsByUserID(userID string) ([]model.Channels, error) {
+func GetChannelByChannelID(channelID string) ([]model.Channels, error) {
+
+	rows, err := db.Query("SELECT c.id, c.name, c.description, c.created_at, c.updated_at FROM channels c WHERE c.id = ?", channelID)
+
+	channels := make([]model.Channels, 0)
+
+	for rows.Next() {
+		var c model.Channels
+		if ServerErr := rows.Scan(&c.ID, &c.Name, &c.Description, &c.CreatedAt, &c.UpdatedAt); ServerErr != nil {
+			log.Printf("fail: rows.Scan, %v\n", err)
+
+			if ServerErr := rows.Close(); ServerErr != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
+				log.Printf("fail: rows.Close(), %v\n", err)
+			}
+			return nil, ServerErr
+		}
+		channels = append(channels, c)
+	}
+
+	return channels, err
+}
+
+func GetUserChannelsByUserID(userID string) ([]model.Channels, error) {
 
 	rows, err := db.Query("SELECT c.id, c.name, c.description, c.created_at, c.updated_at FROM members m JOIN channels c ON m.channel_id = c.id WHERE m.user_id = ?", userID)
 
@@ -27,7 +49,7 @@ func GetJoinChannelsByUserID(userID string) ([]model.Channels, error) {
 	return channels, err
 }
 
-func GetNotJoinChannelsByUserID(userID string) ([]model.Channels, error) {
+func GetOtherChannelsByUserID(userID string) ([]model.Channels, error) {
 
 	rows, err := db.Query("SELECT c.id, c.name, c.description, c.created_at, c.updated_at FROM channels c WHERE NOT EXISTS(SELECT 1 FROM members m WHERE m.channel_id = c.id AND m.user_id = ?)", userID)
 

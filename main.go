@@ -15,9 +15,11 @@ func init() {
 func main() {
 
 	http.HandleFunc("/user", controller.UserHandler)
+	http.HandleFunc("/user/id", controller.UserIDHandler)
 	http.HandleFunc("/message", controller.MessageHandler)
-	http.HandleFunc("/channel/join", controller.ChannelHandler)
-	http.HandleFunc("/channel/notjoin", controller.NotJoinChannelHandler)
+	http.HandleFunc("/channel", controller.ChannelIDHandler)
+	http.HandleFunc("/channel/join", controller.UserChannelHandler)
+	http.HandleFunc("/channel/notjoin", controller.OtherChannelHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	dao.DBClose()
