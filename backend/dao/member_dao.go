@@ -3,9 +3,11 @@ package dao
 import (
 	"db/model"
 	"log"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-func CreateRoom(room model.Rooms) error {
+func CreateMember(m model.Members) error {
 	//トランザクション開始
 	tx, err := db.Begin()
 	if err != nil {
@@ -14,7 +16,7 @@ func CreateRoom(room model.Rooms) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO rooms(id, name, created_at, updated_at) values (?,?,?,?)", room.ID, room.Name, room.CreatedAt, room.UpdatedAt)
+	_, err = tx.Exec("INSERT INTO members(user_id, channel_id) values (?,?)", m.UserID, m.ChannelID)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()

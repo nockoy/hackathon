@@ -12,13 +12,30 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type UserID struct {
-	ID string `json:"id"`
+type User struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Icon string `json:"icon"`
 }
 
-func SearchUser(name string) ([]byte, error) {
+func SearchUserByEmail(email string) ([]byte, error) {
 
-	users, err := dao.SearchUserByName(name)
+	users, err := dao.SearchUserByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := json.Marshal(users)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}
+
+func SearchUserByUserID(userID string) ([]byte, error) {
+
+	users, err := dao.SearchUserByUserID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -34,6 +51,7 @@ func SearchUser(name string) ([]byte, error) {
 func RegisterUser(u model.Users) ([]byte, error) {
 
 	u.ID = ulid.Make().String()
+	u.Icon = ""
 
 	//日本の現在時刻を記録したいが日本の時刻にならなかった
 	jst := time.FixedZone("Asia/Tokyo", 9*60*60)
@@ -46,11 +64,13 @@ func RegisterUser(u model.Users) ([]byte, error) {
 		return nil, err
 	}
 
-	//idを返す
-	var userID UserID
-	userID.ID = u.ID
+	//id,name,iconを返す
+	var user User
+	user.ID = u.ID
+	user.Name = u.Name
+	user.Icon = u.Icon
 
-	bytes, err := json.Marshal(userID)
+	bytes, err := json.Marshal(user)
 	if err != nil {
 		log.Printf("fail: json.Marshal, %v\n", err)
 		return nil, err

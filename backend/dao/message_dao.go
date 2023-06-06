@@ -7,15 +7,15 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func GetMessage(RoomID string) ([]model.Messages, error) {
+func GetMessages(ChannelID string) ([]model.MessagesAndUserInfo, error) {
 
-	rows, err := db.Query("SELECT * FROM messages WHERE room_id = ?", RoomID)
+	rows, err := db.Query("SELECT m.id, m.channel_id, m.user_id, m.text, m.created_at, m.updated_at, u.name, u.email, u.icon FROM messages m JOIN users u ON m.user_id = u.id WHERE m.channel_id = ?", ChannelID)
 
-	messages := make([]model.Messages, 0)
+	messages := make([]model.MessagesAndUserInfo, 0)
 
 	for rows.Next() {
-		var m model.Messages
-		if ServerErr := rows.Scan(&m.ID, &m.ReplyToID, &m.RoomID, &m.UserID, &m.Text, &m.CreatedAt, &m.UpdatedAt); ServerErr != nil {
+		var m model.MessagesAndUserInfo
+		if ServerErr := rows.Scan(&m.ID, &m.ChannelID, &m.UserID, &m.Text, &m.CreatedAt, &m.UpdatedAt, &m.Name, &m.Email, &m.Icon); ServerErr != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 
 			if ServerErr := rows.Close(); ServerErr != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
@@ -29,6 +29,28 @@ func GetMessage(RoomID string) ([]model.Messages, error) {
 	return messages, err
 }
 
+//func GetMessages(ChannelID string) ([]model.Messages, error) {
+//
+//	rows, err := db.Query("SELECT * FROM messages WHERE channel_id = ?", ChannelID)
+//
+//	messages := make([]model.Messages, 0)
+//
+//	for rows.Next() {
+//		var m model.Messages
+//		if ServerErr := rows.Scan(&m.ID, &m.ChannelID, &m.UserID, &m.Text, &m.CreatedAt, &m.UpdatedAt); ServerErr != nil {
+//			log.Printf("fail: rows.Scan, %v\n", err)
+//
+//			if ServerErr := rows.Close(); ServerErr != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
+//				log.Printf("fail: rows.Close(), %v\n", err)
+//			}
+//			return nil, ServerErr
+//		}
+//		messages = append(messages, m)
+//	}
+//
+//	return messages, err
+//}
+
 func CreateMSG(m model.Messages) error {
 	//トランザクション開始
 	tx, err := db.Begin()
@@ -38,7 +60,7 @@ func CreateMSG(m model.Messages) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO messages(id, room_id, user_id, text, created_at, updated_at) values (?,?,?,?,?,?)", m.ID, m.RoomID, m.UserID, m.Text, m.CreatedAt, m.UpdatedAt)
+	_, err = tx.Exec("INSERT INTO messages(id, channel_id, user_id, text) values (?,?,?,?)", m.ID, m.ChannelID, m.UserID, m.Text)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()
