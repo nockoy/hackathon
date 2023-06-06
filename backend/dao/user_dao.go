@@ -22,6 +22,14 @@ func CreateUser(u model.Users) error {
 		return err
 	}
 
+	//みんなgeneralチャンネルに入れる
+	_, err = tx.Exec("INSERT INTO members(user_id, channel_id) values (?,?)", u.ID, "01H280H7SZ3JEHT0QRW8P658BF")
+	if err != nil {
+		log.Printf("fail: tx.Exec, %v\n", err)
+		tx.Rollback()
+		return err
+	}
+
 	//トランザクション終了
 	if err := tx.Commit(); err != nil {
 		log.Printf("fail: tx.Commit, %v\n", err)
