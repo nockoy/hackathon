@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/oklog/ulid/v2"
 	"log"
-	"time"
 )
 
 type ChannelID struct {
@@ -62,13 +61,6 @@ func GetOtherChannelsByUserID(userID string) ([]byte, error) {
 func RegisterChannel(channel model.Channels) ([]byte, error) {
 
 	channel.ID = ulid.Make().String()
-
-	//日本の現在時刻を記録したいが日本の時刻にならなかった
-	jst := time.FixedZone("Asia/Tokyo", 9*60*60)
-	nowJST := time.Now().In(jst)
-
-	channel.CreatedAt = nowJST
-	channel.UpdatedAt = nowJST
 
 	err := dao.CreateChannel(channel)
 	if err != nil {

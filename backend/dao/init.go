@@ -13,6 +13,7 @@ import (
 
 var db *sql.DB
 
+
 	func DBInit() {
 		// DB接続のための準備
 		mysqlUser := os.Getenv("MYSQL_USER")
