@@ -23,7 +23,7 @@ func RegisterMember(m model.Members) ([]byte, error) {
 	}
 
 	//Registerが成功したら知らせる
-	fmt.Println("Register: Channel[", m.ChannelID, "], user[", m.UserID, "]")
+	fmt.Println("Register: channel[", m.ChannelID, "], user[", m.UserID, "]")
 
 	return bytes, nil
 }

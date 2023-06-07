@@ -14,7 +14,7 @@ import (
 var db *sql.DB
 
 
-	func DBInit() {
+func DBInit() {
 		// DB接続のための準備
 		mysqlUser := os.Getenv("MYSQL_USER")
 		mysqlPwd := os.Getenv("MYSQL_PWD")

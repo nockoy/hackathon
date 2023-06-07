@@ -60,7 +60,57 @@ func CreateMSG(m model.Messages) error {
 	}
 
 	//INSERTする
-	_, err = tx.Exec("INSERT INTO messages(id, channel_id, user_id, text) values (?,?,?,?)", m.ID, m.ChannelID, m.UserID, m.Text)
+	_, err = tx.Exec("INSERT INTO messages(id, channel_id, user_id, text) values (?,?,?,?)", m.MessageID, m.ChannelID, m.UserID, m.Text)
+	if err != nil {
+		log.Printf("fail: tx.Exec, %v\n", err)
+		tx.Rollback()
+		return err
+	}
+
+	//トランザクション終了
+	if err := tx.Commit(); err != nil {
+		log.Printf("fail: tx.Commit, %v\n", err)
+		return err
+	}
+
+	return nil
+}
+
+func EditMSG(m model.Messages) error {
+	//トランザクション開始
+	tx, err := db.Begin()
+	if err != nil {
+		log.Printf("fail: db.Begin, %v\n", err)
+		return err
+	}
+
+	//UPDATEする
+	_, err = tx.Exec("UPDATE messages SET text = ? WHERE id = ?", m.Text, m.MessageID)
+	if err != nil {
+		log.Printf("fail: tx.Exec, %v\n", err)
+		tx.Rollback()
+		return err
+	}
+
+	//トランザクション終了
+	if err := tx.Commit(); err != nil {
+		log.Printf("fail: tx.Commit, %v\n", err)
+		return err
+	}
+
+	return nil
+}
+
+func DeleteMSG(m model.Messages) error {
+	//トランザクション開始
+	tx, err := db.Begin()
+	if err != nil {
+		log.Printf("fail: db.Begin, %v\n", err)
+		return err
+	}
+
+	//UPDATEする
+	_, err = tx.Exec("DELETE FROM messages WHERE id = ?", m.MessageID)
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()

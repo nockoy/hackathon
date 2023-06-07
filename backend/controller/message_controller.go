@@ -66,6 +66,49 @@ func GetMessages(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func EditMessage(w http.ResponseWriter, r *http.Request) {
+
+	var m model.Messages
+
+	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("fail: Decode error")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	bytes, err := usecase.EditMessage(m)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+
+}
+
+func DeleteMessage(w http.ResponseWriter, r *http.Request) {
+
+	var m model.Messages
+
+	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("fail: Decode error")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err := usecase.DeleteMSG(m)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
 func MessageHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -79,6 +122,10 @@ func MessageHandler(w http.ResponseWriter, r *http.Request) {
 		GetMessages(w, r)
 	case http.MethodPost:
 		SendMessage(w, r)
+	case http.MethodPut:
+		EditMessage(w, r)
+	case http.MethodDelete:
+		DeleteMessage(w, r)
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
 		w.WriteHeader(http.StatusBadRequest)
