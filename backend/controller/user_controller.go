@@ -97,6 +97,27 @@ func RegisterUserCheck(name string, email string) bool {
 	return true
 }
 
+func EditIcon(w http.ResponseWriter, r *http.Request) {
+
+	var u model.Users
+
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		log.Println("fail: decode err")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	bytes, err := usecase.EditIcon(u)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+
+}
+
 func UserHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -111,6 +132,8 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 		SearchUserByEmail(w, r)
 	case http.MethodPost:
 		RegisterUser(w, r)
+	case http.MethodPut:
+		EditIcon(w, r)
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
 		w.WriteHeader(http.StatusBadRequest)
