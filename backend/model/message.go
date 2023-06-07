@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Messages struct {
-	ID        string    `json:"id" gorm:"primaryKey"`
+	MessageID string    `json:"id" gorm:"primaryKey"`
 	ChannelID string    `json:"channel_id" gorm:"not null"`
 	UserID    string    `json:"user_id" gorm:"not null"`
 	Text      string    `json:"text" gorm:"not null"`

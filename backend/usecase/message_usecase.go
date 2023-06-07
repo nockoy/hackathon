@@ -8,7 +8,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid/v2"
 	"log"
-	"time"
 )
 
 type MessageID struct {
@@ -32,13 +31,7 @@ func GetMessages(RoomID string) ([]byte, error) {
 
 func SendMessage(m model.Messages) ([]byte, error) {
 
-	m.ID = ulid.Make().String()
-
-	//日本の現在時刻を記録したいが日本の時刻にならなかった
-	jst := time.FixedZone("Asia/Tokyo", 9*60*60)
-	nowJST := time.Now().In(jst)
-	m.CreatedAt = nowJST
-	m.UpdatedAt = nowJST
+	m.MessageID = ulid.Make().String()
 
 	err := dao.CreateMSG(m)
 	if err != nil {
@@ -47,7 +40,7 @@ func SendMessage(m model.Messages) ([]byte, error) {
 
 	//idを返す
 	var messageID MessageID
-	messageID.ID = m.ID
+	messageID.ID = m.MessageID
 
 	bytes, err := json.Marshal(messageID)
 	if err != nil {
@@ -59,4 +52,40 @@ func SendMessage(m model.Messages) ([]byte, error) {
 	fmt.Println("Register: ", m)
 
 	return bytes, nil
+}
+
+func EditMessage(m model.Messages) ([]byte, error) {
+
+	err := dao.EditMSG(m)
+	if err != nil {
+		return nil, err
+	}
+
+	//idを返す
+	var messageID MessageID
+	messageID.ID = m.MessageID
+
+	bytes, err := json.Marshal(messageID)
+	if err != nil {
+		log.Printf("fail: json.Marshal, %v\n", err)
+		return nil, err
+	}
+
+	//Registerが成功したら知らせる
+	fmt.Println("Edited: ", m)
+
+	return bytes, nil
+}
+
+func DeleteMSG(m model.Messages) error {
+
+	err := dao.DeleteMSG(m)
+	if err != nil {
+		return err
+	}
+
+	//Registerが成功したら知らせる
+	fmt.Println("Message Deleted: ", m.MessageID)
+
+	return nil
 }

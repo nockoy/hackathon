@@ -5,11 +5,9 @@ import (
 	"db/model"
 	"encoding/json"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid/v2"
 	"log"
-	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 type User struct {
@@ -52,12 +50,6 @@ func RegisterUser(u model.Users) ([]byte, error) {
 
 	u.ID = ulid.Make().String()
 	u.Icon = ""
-
-	//日本の現在時刻を記録したいが日本の時刻にならなかった
-	jst := time.FixedZone("Asia/Tokyo", 9*60*60)
-	nowJST := time.Now().In(jst)
-	u.CreatedAt = nowJST
-	u.UpdatedAt = nowJST
 
 	err := dao.CreateUser(u)
 	if err != nil {

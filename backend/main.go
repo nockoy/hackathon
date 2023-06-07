@@ -16,6 +16,7 @@ func main() {
 
 	http.HandleFunc("/user", controller.UserHandler)
 	http.HandleFunc("/user/id", controller.UserIDHandler)
+	http.HandleFunc("/members", controller.MemberHandler)
 	http.HandleFunc("/message", controller.MessageHandler)
 	http.HandleFunc("/channel", controller.ChannelIDHandler)
 	http.HandleFunc("/channel/join", controller.UserChannelHandler)
