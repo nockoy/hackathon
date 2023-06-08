@@ -108,6 +108,31 @@ func UpdateIcon(u model.Users) error {
 	return nil
 }
 
+func UpdateUserName(u model.Users) error {
+	//トランザクション開始
+	tx, err := db.Begin()
+	if err != nil {
+		log.Printf("fail: db.Begin, %v\n", err)
+		return err
+	}
+
+	//INSERTする
+	_, err = tx.Exec("UPDATE users SET name = ? WHERE id = ?", u.Name, u.ID)
+	if err != nil {
+		log.Printf("fail: tx.Exec, %v\n", err)
+		tx.Rollback()
+		return err
+	}
+
+	//トランザクション終了
+	if err := tx.Commit(); err != nil {
+		log.Printf("fail: tx.Commit, %v\n", err)
+		return err
+	}
+
+	return nil
+}
+
 /*
 func Delete(w http.ResponseWriter) {
 	//トランザクション開始

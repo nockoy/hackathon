@@ -15,9 +15,10 @@ func init() {
 func main() {
 
 	http.HandleFunc("/user", controller.UserHandler)
-	http.HandleFunc("/user/id", controller.UserIDHandler)
+	http.HandleFunc("/user2", controller.UserHandler2)
 	http.HandleFunc("/members", controller.MemberHandler)
 	http.HandleFunc("/message", controller.MessageHandler)
+	http.HandleFunc("/reply", controller.ReplyHandler)
 	http.HandleFunc("/channel", controller.ChannelIDHandler)
 	http.HandleFunc("/channel/join", controller.UserChannelHandler)
 	http.HandleFunc("/channel/notjoin", controller.OtherChannelHandler)

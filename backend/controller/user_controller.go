@@ -118,6 +118,27 @@ func EditIcon(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func EditUserName(w http.ResponseWriter, r *http.Request) {
+
+	var u model.Users
+
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		log.Println("fail: decode err")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	bytes, err := usecase.UpdateUserName(u)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+
+}
+
 func UserHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -129,7 +150,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		SearchUserByEmail(w, r)
+		SearchUserByUserID(w, r)
 	case http.MethodPost:
 		RegisterUser(w, r)
 	case http.MethodPut:
@@ -141,7 +162,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func UserIDHandler(w http.ResponseWriter, r *http.Request) {
+func UserHandler2(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
@@ -152,7 +173,9 @@ func UserIDHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		SearchUserByUserID(w, r)
+		SearchUserByEmail(w, r)
+	case http.MethodPut:
+		EditUserName(w, r)
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
 		w.WriteHeader(http.StatusBadRequest)
