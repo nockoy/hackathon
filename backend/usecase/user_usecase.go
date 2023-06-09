@@ -73,3 +73,53 @@ func RegisterUser(u model.Users) ([]byte, error) {
 
 	return bytes, nil
 }
+
+func EditIcon(u model.Users) ([]byte, error) {
+
+	err := dao.UpdateIcon(u)
+	if err != nil {
+		return nil, err
+	}
+
+	//id,name,iconを返す
+	var user User
+	user.ID = u.ID
+	user.Name = u.Name
+	user.Icon = u.Icon
+
+	bytes, err := json.Marshal(user)
+	if err != nil {
+		log.Printf("fail: json.Marshal, %v\n", err)
+		return nil, err
+	}
+
+	//Registerが成功したら知らせる
+	fmt.Println("Icon Updated: ", u)
+
+	return bytes, nil
+}
+
+func UpdateUserName(u model.Users) ([]byte, error) {
+
+	err := dao.UpdateUserName(u)
+	if err != nil {
+		return nil, err
+	}
+
+	//id,name,iconを返す
+	var user User
+	user.ID = u.ID
+	user.Name = u.Name
+	user.Icon = u.Icon
+
+	bytes, err := json.Marshal(user)
+	if err != nil {
+		log.Printf("fail: json.Marshal, %v\n", err)
+		return nil, err
+	}
+
+	//Registerが成功したら知らせる
+	fmt.Println("Username Updated: ", u)
+
+	return bytes, nil
+}

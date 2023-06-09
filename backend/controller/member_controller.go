@@ -30,6 +30,27 @@ func RegisterMember(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func DeleteMember(w http.ResponseWriter, r *http.Request) {
+
+	var m model.Members
+
+	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
+		log.Println("fail: decode error")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	bytes, err := usecase.DeleteMember(m)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+
+}
+
 func MemberHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -42,8 +63,8 @@ func MemberHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		RegisterMember(w, r)
-	case http.MethodOptions:
-		RegisterMember(w, r)
+	case http.MethodDelete:
+		DeleteMember(w, r)
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
 		w.WriteHeader(http.StatusBadRequest)
