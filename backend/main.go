@@ -1,8 +1,8 @@
 package main
 
 import (
-	"db/controller"
 	"db/dao"
+	"db/router"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
@@ -14,14 +14,14 @@ func init() {
 
 func main() {
 
-	http.HandleFunc("/user", controller.UserHandler)
-	http.HandleFunc("/user2", controller.UserHandler2)
-	http.HandleFunc("/members", controller.MemberHandler)
-	http.HandleFunc("/message", controller.MessageHandler)
-	http.HandleFunc("/reply", controller.ReplyHandler)
-	http.HandleFunc("/channel", controller.ChannelIDHandler)
-	http.HandleFunc("/channel/join", controller.UserChannelHandler)
-	http.HandleFunc("/channel/notjoin", controller.OtherChannelHandler)
+	http.HandleFunc("/user", router.UserHandler)
+	http.HandleFunc("/user2", router.UserHandler2)
+	http.HandleFunc("/members", router.MemberHandler)
+	http.HandleFunc("/message", router.MessageHandler)
+	http.HandleFunc("/reply", router.ReplyHandler)
+	http.HandleFunc("/channel", router.ChannelIDHandler)
+	http.HandleFunc("/channel/join", router.UserChannelHandler)
+	http.HandleFunc("/channel/other", router.OtherChannelHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	dao.DBClose()

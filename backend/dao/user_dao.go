@@ -67,7 +67,14 @@ func CreateUser(u model.Users) error {
 	}
 
 	//みんなgeneralチャンネルに入れる
-	_, err = tx.Exec("INSERT INTO members(user_id, channel_id) values (?,?)", u.ID, "01H1YHE91KAFPW7YXDG9Z7W4RR")
+	_, err = tx.Exec("INSERT INTO members(user_id, channel_id) values (?,?)", u.ID, "01H280H7SZ3JEHT0QRW8P658BF")
+	if err != nil {
+		log.Printf("fail: tx.Exec, %v\n", err)
+		tx.Rollback()
+		return err
+	}
+	//みんなrandomチャンネルに入れる
+	_, err = tx.Exec("INSERT INTO members(user_id, channel_id) values (?,?)", u.ID, "01H28C7STNZH7P46P3XEF07WYD")
 	if err != nil {
 		log.Printf("fail: tx.Exec, %v\n", err)
 		tx.Rollback()

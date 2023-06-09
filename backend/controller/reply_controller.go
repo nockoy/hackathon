@@ -33,21 +33,3 @@ func SendReply(w http.ResponseWriter, r *http.Request) {
 	w.Write(bytes)
 
 }
-
-func ReplyHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-	}
-	switch r.Method {
-	case http.MethodPost:
-		SendReply(w, r)
-	default:
-		log.Printf("fail: HTTP Method is %s\n", r.Method)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-}
