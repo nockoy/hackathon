@@ -66,6 +66,21 @@ func GetMessages(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func GetMSGByMSGID(w http.ResponseWriter, r *http.Request) {
+
+	messageId := r.URL.Query().Get("message_id")
+
+	bytes, err := usecase.GetMSGByMSGID(messageId)
+	if err != nil {
+		log.Printf("fail: , %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+
+}
+
 func EditMessage(w http.ResponseWriter, r *http.Request) {
 
 	var m model.Messages

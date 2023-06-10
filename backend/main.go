@@ -18,6 +18,7 @@ func main() {
 	http.HandleFunc("/user2", router.UserHandler2)
 	http.HandleFunc("/members", router.MemberHandler)
 	http.HandleFunc("/message", router.MessageHandler)
+	http.HandleFunc("/message/id", router.MessageIDHandler)
 	http.HandleFunc("/reply", router.ReplyHandler)
 	http.HandleFunc("/channel", router.ChannelIDHandler)
 	http.HandleFunc("/channel/join", router.UserChannelHandler)

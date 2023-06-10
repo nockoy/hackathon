@@ -29,6 +29,21 @@ func GetMessages(RoomID string) ([]byte, error) {
 	return bytes, nil
 }
 
+func GetMSGByMSGID(MessageID string) ([]byte, error) {
+
+	messages, err := dao.GetMSGByMSGID(MessageID)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := json.Marshal(messages)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}
+
 func SendMessage(m model.Messages) ([]byte, error) {
 
 	m.MessageID = ulid.Make().String()

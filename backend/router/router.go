@@ -95,6 +95,24 @@ func MessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func MessageIDHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+	switch r.Method {
+	case http.MethodGet:
+		controller.GetMSGByMSGID(w, r)
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
 func ReplyHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -104,8 +122,14 @@ func ReplyHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}
 	switch r.Method {
+	case http.MethodGet:
+		controller.GetReplies(w, r)
 	case http.MethodPost:
 		controller.SendReply(w, r)
+	case http.MethodPut:
+		controller.EditReply(w, r)
+	case http.MethodDelete:
+		controller.DeleteReply(w, r)
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
 		w.WriteHeader(http.StatusBadRequest)
