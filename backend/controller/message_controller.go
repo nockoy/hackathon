@@ -66,6 +66,21 @@ func GetMessages(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func GetMSGByMSGID(w http.ResponseWriter, r *http.Request) {
+
+	messageId := r.URL.Query().Get("message_id")
+
+	bytes, err := usecase.GetMSGByMSGID(messageId)
+	if err != nil {
+		log.Printf("fail: , %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+
+}
+
 func EditMessage(w http.ResponseWriter, r *http.Request) {
 
 	var m model.Messages
@@ -107,28 +122,4 @@ func DeleteMessage(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	return
-}
-
-func MessageHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-	}
-	switch r.Method {
-	case http.MethodGet:
-		GetMessages(w, r)
-	case http.MethodPost:
-		SendMessage(w, r)
-	case http.MethodPut:
-		EditMessage(w, r)
-	case http.MethodDelete:
-		DeleteMessage(w, r)
-	default:
-		log.Printf("fail: HTTP Method is %s\n", r.Method)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 }
